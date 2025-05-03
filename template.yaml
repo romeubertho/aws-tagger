@@ -57,4 +57,37 @@ Resources:
             ScheduleExpressionTimezone: UTC
       Tags:
         Name: !Sub "${AWS::StackName}-lambda-tagger"
-        
+
+  S3BucketTaggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-s3-tagger"
+      CodeUri: functions/s3_tagger
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Timeout: 120
+      MemorySize: 128
+      Environment:
+        Variables:
+          POWERTOOLS_SERVICE_NAME: s3-tagger
+          POWERTOOLS_LOG_LEVEL: !Ref LogLevel
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:ListAllMyBuckets
+                - s3:ListBucket
+                - s3:GetBucketTagging
+                - s3:PutBucketTagging
+              Resource: "*"
+      Events:
+        TimerEvent:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 0 * * ? *)
+            ScheduleExpressionTimezone: UTC
+      Tags:
+        Name: !Sub "${AWS::StackName}-s3-tagger"
