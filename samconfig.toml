@@ -1,0 +1,22 @@
+version = 0.1
+
+[prod]
+[prod.deploy.parameters]
+stack_name = "aws-tagger-prod"
+s3_prefix = "aws-tagger-prod"
+region = "us-east-1"
+fail_on_empty_changeset = false
+capabilities = "CAPABILITY_NAMED_IAM"
+parameter_overrides=[
+    "Env=prod",
+    "LogLevel=INFO",
+    "TagEnvironmentValue=prod"
+]
+[prod.sync]
+[prod.sync.parameters]
+watch = true
+parameter_overrides=[
+    "Env=prod",
+    "LogLevel=DEBUG",
+    "TagEnvironmentValue=prod"
+]

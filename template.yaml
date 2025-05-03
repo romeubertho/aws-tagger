@@ -1,0 +1,60 @@
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+    Default: dev
+  LogLevel:
+    Type: String
+    Default: INFO
+    Description: Log level
+  TagProjectValue:
+    Type: String
+    Description: The value to use for the Project tag
+    Default: aws-tagger
+  TagEnvironmentValue:
+    Type: String
+    Description: Tag environment
+
+Globals:
+  Function:
+    Tracing: Disabled
+    Tags:
+      StackName: !Ref AWS::StackName
+      Project: !Ref TagProjectValue
+      Environment: !Ref TagEnvironmentValue
+
+Resources:
+  LambdaTaggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-lambda-tagger"
+      CodeUri: functions/lambda_tagger
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      Timeout: 120
+      MemorySize: 128
+      Environment:
+        Variables:
+          POWERTOOLS_SERVICE_NAME: lambda-tagger
+          POWERTOOLS_LOG_LEVEL: !Ref LogLevel
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - lambda:ListFunctions
+                - lambda:ListTags
+                - lambda:TagResource
+              Resource: "*"
+      Events:
+        TimerEvent:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: cron(0 0 * * ? *)
+            ScheduleExpressionTimezone: UTC
+      Tags:
+        Name: !Sub "${AWS::StackName}-lambda-tagger"
+        

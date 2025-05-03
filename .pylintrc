@@ -1,0 +1,79 @@
+[MASTER]
+# Specify a configuration file.
+rcfile=
+
+# Python code to check (leave empty for all files in the project).
+ignore-patterns=tests/*
+
+# Python version compatibility (Python 3.12 in this case).
+py-version=3.12
+
+[MESSAGES CONTROL]
+# Enable or disable specific pylint messages.
+enable=
+    all
+
+disable=
+    C0114,  # Missing module docstring
+    C0115,  # Missing class docstring
+    C0116,  # Missing function or method docstring
+    C0103,  # Variable name doesn't conform to snake_case
+    R0903,  # Too few public methods in a class
+    W0511,  # TODO comments
+    R0801,  # Duplicate code
+
+[REPORTS]
+# Tweak how reports are displayed (set to 0 to only show messages).
+reports=no
+score=no
+
+[DESIGN]
+# Maximum number of parents a class can have.
+max-parents=7
+
+# Maximum number of attributes in a class.
+max-attributes=15
+
+# Maximum number of public methods in a class.
+max-public-methods=20
+
+[FORMAT]
+# Set the maximum allowed line length.
+max-line-length=120
+
+# Regular expression matching correct variable names.
+variable-rgx=[a-z_][a-z0-9_]{0,30}$
+
+# Regular expression matching correct constant names.
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+[TYPECHECK]
+# Disable type checking for specific types or modules.
+generated-members=numpy.*,torch.*
+
+[BASIC]
+# Naming conventions.
+good-names=i,j,k,x,y,z,ex,Run
+
+[IMPORTS]
+# Allow wildcard imports from specific modules.
+allow-wildcard-with-all=true
+
+# Import order (standard, third-party, local).
+known-standard-library=numpy,os,sys
+known-third-party=flask,requests
+
+[MISCELLANEOUS]
+notes=FIXME,TODO
+
+[LOGGING]
+# Recognize custom logging methods.
+logging-modules=logging,my_logger
+
+[SIMILARITIES]
+# Minimum similarity ratio for duplicate code.
+min-similarity-lines=4
+
+[VARIABLES]
+# Allow dummy variables starting with an underscore.
+dummy-variables-rgx=_.*|dummy
